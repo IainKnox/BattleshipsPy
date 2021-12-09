@@ -38,12 +38,10 @@ game_rules = """
 
 
 while instructions != "y" and instructions != "n":
-    """
-    test to see whether the user has pressed Y or N
-    and convert to lowercase. If incorrect value is
-    chosen, the throw error and repeat till valid
-    answer is given.
-    """
+    # test to see whether the user has pressed Y or N
+    # and convert to lowercase. If incorrect value is
+    # chosen, the throw error and repeat till valid
+    # answer is given.
     print("Your seleciton is invalid, Please enter Y for 'Yes' and N for 'No'\n")
     instructions = input().lower()
 else:
