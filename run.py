@@ -50,8 +50,27 @@ else:
     else:
         print(game_rules)
 
-game_board = [["¦  ¦"for x in range(8)] for y in range(8)]
-for i in game_board:
-    print(" --   --   --   --   --   --   --   --")
-    print(" ".join(i))
-    print(" --   --   --   --   --   --   --   --")
+# game_board = [["¦  ¦"for x in range(8)] for y in range(8)]
+# for i in game_board:
+#     print("\033[1;32;40m --   --   --   --   --   --   --   --")
+#     print(" ".join(i))
+#     print(" --   --   --   --   --   --   --   --\033[0;37;40m")
+
+
+game_board = []
+def print_board(game_board):
+    print("  0, 1, 2, 3, 4, 5, 6, 7, 8, 9")
+    print(" -- " * 10)
+    for row in range(10):
+        game_board.append(" [] "* 10)
+    letter = 0
+    for letter in range(10):
+        print(chr(letter + 65), end=" ¦")
+        for column in range(len(game_board[letter])):
+            print(game_board[letter][column], end="")
+        print("¦ ")
+        letter += 1
+    print("---  " * 10)
+
+print_board(game_board)
+        
