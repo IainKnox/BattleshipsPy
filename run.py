@@ -44,7 +44,6 @@ while instructions != "y" and instructions != "n":
     # answer is given.
     print("Your seleciton is invalid, Please enter Y for 'Yes' and N for 'No'\n")
     instructions = input().lower()
-else:
     if instructions == "n":
         print("Let's set up the game board\n")
     else:
@@ -57,17 +56,12 @@ else:
 #     print(" --   --   --   --   --   --   --   --\033[0;37;40m")
 
 from string import ascii_uppercase as letters
-letter = list(letters[:10])
-num = iter(range(0,9))
 
+letter = list(letters[:10]) #create a list of letters to use on the ocean grid.
+# look at possibility of user defining a board size to a max. of 26 letters
+num = iter(range(0,26)) # generate a list of numbers for the ocean grid
+missle = 10
 game_board = [["0" for x in range(10)] for y in range(10)]
-print("   " + " ".join(letter))
-for row in game_board:
-    print(next(num), end="¦ ")
-    print(" ".join(row))
-
-
-
 
 
 # game_board = []
@@ -86,4 +80,28 @@ for row in game_board:
 #     print("--   " * 10)
 
 # print_board(game_board)
+
+#game loop
+play = True
+while play and missle > 0:
+    num = iter(range(0,26)) # ensure the iteration continues while the game players
+    
+    print("   " + " ".join(letter))
+    for row in game_board:
+        print(next(num), end="¦ ")
+        print(" ".join(row))
+
+#create an input for user to enter co-ordinates to fire missle at
+# based on difficulty, the player will have a set number of shots eg. 75/50/25
+
+    if missle > 0:
+        fire_missle = input(" Enter launch co-ordinate (eg.A4): \n")
+        fire_missle = list(fire_missle)
+        #firing sequence letter then number
+        game_board[int(fire_missle[1])-1][letter.index(fire_missle[0])] = "x"
+        missle = missle -1
+        print(f"you have {missle} missles left.\n")
+    else:
+        print("You are out of missles.\n")
+        break
         
