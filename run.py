@@ -6,7 +6,7 @@ given the option to review the offical rules on how to play the game
 or enter their name and proceed to start.
 """
 
-print("Welcome to BattleshipsPY\n")
+print("\033[0;37;40m Welcome to \033[1;34;40m BattleshipsPY \033[0;37;40m \n")
 print("Would you like to review the game instructions? Press Y or N\n")
 instructions = input().lower()
 
@@ -47,6 +47,11 @@ while instructions != "y" and instructions != "n":
 else:
     if instructions == "n":
         print("Let's set up the game board\n")
-        break
     else:
         print(game_rules)
+
+game_board = [["¦  ¦"for x in range(8)] for y in range(8)]
+for i in game_board:
+    print(" --   --   --   --   --   --   --   --")
+    print(" ".join(i))
+    print(" --   --   --   --   --   --   --   --")
