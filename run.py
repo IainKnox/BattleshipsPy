@@ -49,5 +49,6 @@ while instructions != "y" and instructions != "n":
 else:
     if instructions == "n":
         print("Let's set up the game board\n")
+        break
     else:
         print(game_rules)
