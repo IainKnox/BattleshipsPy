@@ -56,21 +56,34 @@ else:
 #     print(" ".join(i))
 #     print(" --   --   --   --   --   --   --   --\033[0;37;40m")
 
+from string import ascii_uppercase as letters
+letter = list(letters[:10])
+num = iter(range(0,9))
 
-game_board = []
-def print_board(game_board):
-    print("  0, 1, 2, 3, 4, 5, 6, 7, 8, 9")
-    print(" -- " * 10)
-    for row in range(10):
-        game_board.append(" [] "* 10)
-    letter = 0
-    for letter in range(10):
-        print(chr(letter + 65), end=" ¦")
-        for column in range(len(game_board[letter])):
-            print(game_board[letter][column], end="")
-        print("¦ ")
-        letter += 1
-    print("---  " * 10)
+game_board = [["0" for x in range(10)] for y in range(10)]
+print("   " + " ".join(letter))
+for row in game_board:
+    print(next(num), end="¦ ")
+    print(" ".join(row))
 
-print_board(game_board)
+
+
+
+
+# game_board = []
+# def print_board(game_board):
+#     print("  0, 1, 2, 3, 4, 5, 6, 7, 8, 9")
+#     print(" -- " * 10)
+#     for row in range(10):
+#         game_board.append(" [] "* 10)
+#     letter = 0
+#     for letter in range(10):
+#         print(chr(letter + 65), end=" ¦")
+#         for column in range(len(game_board[letter])):
+#             print(game_board[letter][column], end="")
+#         print("¦ ")
+#         letter += 1
+#     print("--   " * 10)
+
+# print_board(game_board)
         
