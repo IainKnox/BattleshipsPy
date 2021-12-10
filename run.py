@@ -5,10 +5,18 @@ When running the terminal, players are welcomed to the game,
 given the option to review the offical rules on how to play the game
 or enter their name and proceed to start.
 """
+import time
+import os
 
 print("\033[0;37;40m Welcome to \033[1;34;40m BattleshipsPY \033[0;37;40m \n")
-print("Would you like to review the game instructions? Press Y or N\n")
-instructions = input().lower()
+name = input("Please enter you name Captain: \n")
+while name == "":
+    print("You'll need to speak up, didn't quite get that.")
+    name = input("Please enter your name Captain: \n")
+else:
+    print(f"alright {name}, let's prepare for war\n")
+
+instructions = input("Would you like to review the game instructions? Press Y or N\n").lower()
 
 game_rules = """
     1) Be the first to sink all 5 of your opponents ships.
@@ -42,12 +50,18 @@ while instructions != "y" and instructions != "n":
     # and convert to lowercase. If incorrect value is
     # chosen, the throw error and repeat till valid
     # answer is given.
-    print("Your seleciton is invalid, Please enter Y for 'Yes' and N for 'No'\n")
+    print("Your selection is invalid, Please enter Y for 'Yes' and N for 'No'\n")
     instructions = input().lower()
-    if instructions == "n":
-        print("Let's set up the game board\n")
-    else:
+    if instructions == "y":
         print(game_rules)
+    else:
+        print("Let's set up the game board\n")
+
+input("Press any key to continue...\n")
+time.sleep(1)
+os.system("clear")
+
+
 
 # game_board = [["¦  ¦"for x in range(8)] for y in range(8)]
 # for i in game_board:
@@ -60,7 +74,7 @@ from string import ascii_uppercase as letters
 letter = list(letters[:10]) #create a list of letters to use on the ocean grid.
 # look at possibility of user defining a board size to a max. of 26 letters
 num = iter(range(0,26)) # generate a list of numbers for the ocean grid
-missle = 10
+missle = 10 # number of missles set when game is initialized
 game_board = [["0" for x in range(10)] for y in range(10)]
 
 
@@ -85,7 +99,6 @@ game_board = [["0" for x in range(10)] for y in range(10)]
 play = True
 while play and missle > 0:
     num = iter(range(0,26)) # ensure the iteration continues while the game players
-    
     print("   " + " ".join(letter))
     for row in game_board:
         print(next(num), end="¦ ")
@@ -93,15 +106,13 @@ while play and missle > 0:
 
 #create an input for user to enter co-ordinates to fire missle at
 # based on difficulty, the player will have a set number of shots eg. 75/50/25
-
+# built functionality around whether missles hit, miss or sink opponents ships
     if missle > 0:
         fire_missle = input(" Enter launch co-ordinate (eg.A4): \n")
         fire_missle = list(fire_missle)
         #firing sequence letter then number
         game_board[int(fire_missle[1])-1][letter.index(fire_missle[0])] = "x"
-        missle = missle -1
+        missle =-1
         print(f"you have {missle} missles left.\n")
     else:
         print("You are out of missles.\n")
-        break
-        
