@@ -100,7 +100,18 @@ class all_ships:
         each instance of the all_ship class has a starting point, 
         a lenght and a direction
         """ 
-        pass
+        co_ords = []
+        for i in range(length):
+            if direction == "U": #up
+                body = (start[0], start[1] -1) #minus 1 from y co-ord
+            elif direction == "D": #down
+                body = (start[0], start[1] +1) #add 1 to y co-ord
+            elif direction == "L": #left
+                body = (start[0] -1, start[1]) #minus 1 from x co-ord
+            elif direction == "R": #right
+                body = (start[0] +1, start[1]) #add 1 to x co-ord
+            co_ords.append(body)
+        return all_ships.co_ords
 
     def __init__(self, co_ords): #co-ords are the location of the ship object
         self.co_ords = co_ords
