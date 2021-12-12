@@ -73,7 +73,7 @@ game_rules = """
 """
 
 
-class all_ships: 
+class all_ships:
     """
     create a ship class used to build all ships from
     a ship is constructed of a name/type, lenght, status(hit/destroyed)
@@ -81,9 +81,9 @@ class all_ships:
     @staticmethod #create the build method on the class and not the instance
     def build(start, lenght, direction):
         """
-        each instance of the all_ship class has a starting point, 
+        each instance of the all_ship class has a starting point,
         a lenght and a direction
-        """ 
+        """
         co_ords = []
         for i in range(length):
             if direction == "U": #up
@@ -95,10 +95,20 @@ class all_ships:
             elif direction == "R": #right
                 body = (start[0] +1, start[1]) #add 1 to x co-ord
             co_ords.append(body)
-        return all_ships.co_ords
+        return all_ships(co_ords, direction)
 
-    def __init__(self, co_ords): #co-ords are the location of the ship object
+    def __init__(self, co_ords, direction): #co-ords are the location of the ship object
         self.co_ords = co_ords
+        self.direction = direction
+        self.hits = [False] * len(co_ords)
+
+    def co_ords_index(self, location):
+        try:
+            return self.co_ords.index(location)
+        except ValueError:
+            return None
+    def is_sunk(self):
+        return all(self.hits)
 
 
 
@@ -118,12 +128,12 @@ letter = list(letters[:10]) #create a list of letters to use on the ocean grid.
 missle = 10 # number of missles set when game is initialized, set to 10 for testing purposes
 
 def game_board(width, height):
-   
+
     print("+ " + "  ".join(letter) + " +")
     header = ("+" + "---" * width + "+")
     print(header)
     game_board = []
-    
+
     for i in range(height):
         print("¦" + "   " * width + "¦")
     print(header)
@@ -146,9 +156,9 @@ game_board(10, 10)
 # while play and missle > 0:
 #     game_board(10,10)
 
-# #create an input for user to enter co-ordinates to fire missle at
-# # based on difficulty, the player will have a set number of shots eg. 75/50/25
-# # built functionality around whether missles hit, miss or sink opponents ships
+#create an input for user to enter co-ordinates to fire missle at
+# based on difficulty, the player will have a set number of shots eg. 75/50/25
+# built functionality around whether missles hit, miss or sink opponents ships
 #     if missle > 0:
 #         fire_missle = input(" Enter launch co-ordinate (eg.A4): \n")
 #         x, y = fire_missle.split(",")
