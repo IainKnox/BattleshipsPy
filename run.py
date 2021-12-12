@@ -89,10 +89,17 @@ input("Press any key to continue...\n")
 time.sleep(1)
 os.system("clear")
 
-class all_ships: #create a ship class to build all ships from
-    #a ship is constructed of a name/type, lenght, status(hit/destroyed)
+class all_ships: 
+    """
+    create a ship class used to build all ships from
+    a ship is constructed of a name/type, lenght, status(hit/destroyed)
+    """
     @staticmethod #create the build method on the class and not the instance
-    def build(start, lenght, direction): #each instance of the all_ship class has a starting point, a lenght and a direction
+    def build(start, lenght, direction):
+        """
+        each instance of the all_ship class has a starting point, 
+        a lenght and a direction
+        """ 
         pass
 
     def __init__(self, co_ords): #co-ords are the location of the ship object
