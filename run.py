@@ -25,8 +25,8 @@ import random
 
 
 #TODO [ ] define the 2 game phases. setup phase and missle firing phase
-#TODO [ ] define what a Battleship is. what's its name, how long is it?
-#TODO [ ] create an array to hold the Battleships
+#TODO [x] define what a Battleship is. what's its name, how long is it?
+#TODO [x] create an array to hold the Battleships
 #TODO [ ] allow the player to place the ships on the grid.
 #TODO [ ] define ship placement. starting position, grid boundries, illegal moves
 #TODO [ ] define hit, miss and sunk
@@ -44,7 +44,7 @@ else:
     print(f"alright {name}, let's prepare for war\n")
 
 
-instructions = input("Would you like to review the game instructions? Press Y or N\n").lower()
+#instructions = input("Would you like to review the game instructions? Press Y or N\n").lower()
 # Rules taken from official Battleships documentation
 game_rules = """
     1) Be the first to sink all 5 of your opponents ships.
@@ -72,22 +72,6 @@ game_rules = """
         you win the game!
 """
 
-
-while instructions != "y" and instructions != "n":
-    # test to see whether the user has pressed Y or N
-    # and convert to lowercase. If incorrect value is
-    # chosen, the throw error and repeat till valid
-    # answer is given.
-    print("Your selection is invalid, Please enter Y for 'Yes' and N for 'No'\n")
-    instructions = input().lower()
-    if instructions == "y":
-        print(game_rules)
-    else:
-        print("Let's set up the game board\n")
-
-input("Press any key to continue...\n")
-time.sleep(1)
-os.system("clear")
 
 class all_ships: 
     """
@@ -130,46 +114,47 @@ from string import ascii_uppercase as letters
 letter = list(letters[:10]) #create a list of letters to use on the ocean grid.
 # look at possibility of user defining a board size to a max. of 26 letters
 
-num = iter(range(0,26)) # generate a list of numbers for the ocean grid
+
 missle = 10 # number of missles set when game is initialized, set to 10 for testing purposes
-game_board = [["0" for x in range(10)] for y in range(10)]
+
+def game_board(width, height):
+   
+    print("+ " + "  ".join(letter) + " +")
+    header = ("+" + "---" * width + "+")
+    print(header)
+    game_board = []
+    
+    for i in range(height):
+        print("¦" + "   " * width + "¦")
+    print(header)
+
+# game_board = [["0" for x in range(10)] for y in range(10)]
+
+game_board(10, 10)
 
 
-# game_board = []
-# def print_board(game_board):
-#     print("  0, 1, 2, 3, 4, 5, 6, 7, 8, 9")
-#     print(" -- " * 10)
-#     for row in range(10):
-#         game_board.append(" [] "* 10)
-#     letter = 0
-#     for letter in range(10):
-#         print(chr(letter + 65), end=" ¦")
-#         for column in range(len(game_board[letter])):
-#             print(game_board[letter][column], end="")
-#         print("¦ ")
-#         letter += 1
-#     print("--   " * 10)
 
-# print_board(game_board)
 
-#game loop
-play = True
-while play and missle > 0:
-    num = iter(range(0,26)) # ensure the iteration continues while the game players
-    print("   " + " ".join(letter))
-    for row in game_board:
-        print(next(num), end="¦ ")
-        print(" ".join(row))
 
-#create an input for user to enter co-ordinates to fire missle at
-# based on difficulty, the player will have a set number of shots eg. 75/50/25
-# built functionality around whether missles hit, miss or sink opponents ships
-    if missle > 0:
-        fire_missle = input(" Enter launch co-ordinate (eg.A4): \n")
-        x, y = fire_missle.split(",")
-        #firing sequence letter then number (A,4)
-        game_board[int(fire_missle[1])-1][letter.index(fire_missle[0])] = "x"
-        missle =-1
-        print(f"you have {missle} missles left.\n")
-    else:
-        print("You are out of missles.\n")
+
+
+
+
+
+# #game loop
+# play = True
+# while play and missle > 0:
+#     game_board(10,10)
+
+# #create an input for user to enter co-ordinates to fire missle at
+# # based on difficulty, the player will have a set number of shots eg. 75/50/25
+# # built functionality around whether missles hit, miss or sink opponents ships
+#     if missle > 0:
+#         fire_missle = input(" Enter launch co-ordinate (eg.A4): \n")
+#         x, y = fire_missle.split(",")
+#         #firing sequence letter then number (A,4)
+#         game_board[int(fire_missle[1])-1][letter.index(fire_missle[0])] = "x"
+#         missle =-1
+#         print(f"you have {missle} missles left.\n")
+#     else:
+#         print("You are out of missles.\n")
