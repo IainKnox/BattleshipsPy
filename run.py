@@ -24,26 +24,28 @@ import os
 import random
 
 
-# TODO [ ] define the 2 game phases. setup phase and missle firing phase
-# TODO [ ] define what a Battleship is. what's its name, how long is it?
-# TODO [ ] create an array to hold the Battleships
-# TODO [ ] allow the player to place the ships on the grid.
-# TODO [ ] define ship placement. starting position, grid boundries, illegal moves
-# TODO [ ] define hit, miss and sunk
-# TODO [ ] define scoring, and a win or lose condition resulting in endgame.
-# TODO [ ] add some ASCII artwork to fancy it up
+#TODO [ ] define the 2 game phases. setup phase and missle firing phase
+#TODO [ ] define what a Battleship is. what's its name, how long is it?
+#TODO [ ] create an array to hold the Battleships
+#TODO [ ] allow the player to place the ships on the grid.
+#TODO [ ] define ship placement. starting position, grid boundries, illegal moves
+#TODO [ ] define hit, miss and sunk
+#TODO [ ] define scoring, and a win or lose condition resulting in endgame.
+#TODO [ ] add some ASCII artwork to fancy it up
 
 
-print("\033[0;37;40m Welcome to \033[1;34;40m BattleshipsPY \033[0;37;40m \n")
+print("Welcome to BattleshipsPY\n")
 name = input("Please enter you name Captain: \n")
+
 while name == "":
     print("You'll need to speak up, didn't quite get that.")
     name = input("Please enter your name Captain: \n")
 else:
     print(f"alright {name}, let's prepare for war\n")
 
-instructions = input("Would you like to review the game instructions? Press Y or N\n").lower()
 
+instructions = input("Would you like to review the game instructions? Press Y or N\n").lower()
+# Rules taken from official Battleships documentation
 game_rules = """
     1) Be the first to sink all 5 of your opponents ships.
     2) Place a fleet of 5 ships across the ocean grid.
@@ -87,6 +89,16 @@ input("Press any key to continue...\n")
 time.sleep(1)
 os.system("clear")
 
+class all_ships: #create a ship class to build all ships from
+    #a ship is constructed of a name/type, lenght, status(hit/destroyed)
+    @staticmethod #create the build method on the class and not the instance
+    def build(start, lenght, direction): #each instance of the all_ship class has a starting point, a lenght and a direction
+        pass
+
+    def __init__(self, co_ords): #co-ords are the location of the ship object
+        self.co_ords = co_ords
+
+
 
 
 # game_board = [["¦  ¦"for x in range(8)] for y in range(8)]
@@ -95,12 +107,13 @@ os.system("clear")
 #     print(" ".join(i))
 #     print(" --   --   --   --   --   --   --   --\033[0;37;40m")
 
-from string import ascii_uppercase as letters
 
+from string import ascii_uppercase as letters
 letter = list(letters[:10]) #create a list of letters to use on the ocean grid.
 # look at possibility of user defining a board size to a max. of 26 letters
+
 num = iter(range(0,26)) # generate a list of numbers for the ocean grid
-missle = 10 # number of missles set when game is initialized
+missle = 10 # number of missles set when game is initialized, set to 10 for testing purposes
 game_board = [["0" for x in range(10)] for y in range(10)]
 
 
@@ -135,8 +148,8 @@ while play and missle > 0:
 # built functionality around whether missles hit, miss or sink opponents ships
     if missle > 0:
         fire_missle = input(" Enter launch co-ordinate (eg.A4): \n")
-        fire_missle = list(fire_missle)
-        #firing sequence letter then number
+        x, y = fire_missle.split(",")
+        #firing sequence letter then number (A,4)
         game_board[int(fire_missle[1])-1][letter.index(fire_missle[0])] = "x"
         missle =-1
         print(f"you have {missle} missles left.\n")
