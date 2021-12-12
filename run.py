@@ -4,9 +4,35 @@ Battleships Game
 When running the terminal, players are welcomed to the game,
 given the option to review the offical rules on how to play the game
 or enter their name and proceed to start.
+
+Game structure:
+
+* player vs computer game, where player can place 5 ships on a 10x10grid.
+* computer places ships using random.
+* 2 phases for the game, 1)Setup grid and 2)Missle firing.
+* in the Setup phase, check for legal vs illegal moves.
+* legal move would be (x,y) axis either vertically or horizontally.
+* illegal move would be the intersection of ships, or going off grid.
+* the Missle firing phase would be checking miss vs hits and sink.
+* player starts with a set amount of missles to add a layer of difficulty
+* which are decremented irrespective of hit or miss.
 """
+
+
 import time
 import os
+import random
+
+
+# TODO [ ] define the 2 game phases. setup phase and missle firing phase
+# TODO [ ] define what a Battleship is. what's its name, how long is it?
+# TODO [ ] create an array to hold the Battleships
+# TODO [ ] allow the player to place the ships on the grid.
+# TODO [ ] define ship placement. starting position, grid boundries, illegal moves
+# TODO [ ] define hit, miss and sunk
+# TODO [ ] define scoring, and a win or lose condition resulting in endgame.
+# TODO [ ] add some ASCII artwork to fancy it up
+
 
 print("\033[0;37;40m Welcome to \033[1;34;40m BattleshipsPY \033[0;37;40m \n")
 name = input("Please enter you name Captain: \n")
