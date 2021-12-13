@@ -27,7 +27,7 @@ Legend:
 """
 
 from string import ascii_uppercase as letters
-letter = list(letters[:26])  # create a list of letters to use on the ocean grid.
+letter = list(letters[:10])  # create a list of letters to use on the ocean grid.
 # look at possibility of user defining a board size to a max. of 26 letters
 missle = 10  # number of missles set when game is initialized, set to 10 for testing purposes
 import time
@@ -109,11 +109,11 @@ while instructions != "y" and instructions != "n":
     instructions = input("\nCome again? Please enter y for yes or n for no.\n> ").lower()
 else:
     if instructions == "n":
-        print("\nLooks like we are good to go.\n")  
+        print("\nLooks like we are good to go.\n")
     else:
         print(game_rules)
         time.sleep(2)
-        input("press ENTER to continue")  # give the user time to read over the rules
+        input("press ENTER to continue\n")  # give the user time to read over the rules
 
 
 class gameboard():
@@ -122,7 +122,7 @@ class gameboard():
     gameboard that has width, height and ships.
     """
 
-    def __init__(self, width, height, all_ships):
+    def __init__(self, width, height, ships):
         """
         define what makes a game board and create
         an array to store all the missle co ordinates fired
@@ -130,7 +130,7 @@ class gameboard():
         """
         self.width = width
         self.height = height
-        self.all_ships = all_ships
+        self.ships = ships
         self.shots = []
 
     def take_shots(self, shot_location):
@@ -149,38 +149,40 @@ class gameboard():
         pass
 
 
-class all_ships:
+class ships(object): 
     """
     create a ship class used to build all ships from
     a ship is constructed of a name/type, lenght, status(hit/destroyed)
     """
     @staticmethod  # create the build method on the class and not the instance
-    def build(start, lenght, direction):
+    def build(start, length, direction):
         """
         each instance of the all_ship class has a starting point,
         a lenght and a direction
         """
-        co_ords = []
+        body = []
         for i in range(length):
             if direction == "U":  #up
-                body = (start[0], start[1] -1)  #minus 1 from y co-ord
+                part = (start[0], start[1] -i)  #minus 1 from y co-ord
             elif direction == "D":  #down
-                body = (start[0], start[1] +1)  #add 1 to y co-ord
+                part = (start[0], start[1] +i)  #add 1 to y co-ord
             elif direction == "L":  #left
-                body = (start[0] -1, start[1])  #minus 1 from x co-ord
+                part = (start[0] -i, start[1])  #minus 1 from x co-ord
             elif direction == "R":  #right
-                body = (start[0] +1, start[1])  #add 1 to x co-ord
-            co_ords.append(body)
-        return all_ships(co_ords, direction)
+                part = (start[0] +i, start[1])  #add 1 to x co-ord
 
-    def __init__(self, co_ords, direction):  #co-ords are the location of the ship object
-        self.co_ords = co_ords
+            body.append(part)
+        return ships(body, direction)
+        # syntax for constucting a battleship --> b.ships.build((1,2), 2, "U")
+
+    def __init__(self, body, direction):  #co-ords are the location of the ship object
+        self.body = body
         self.direction = direction
-        self.hits = [False] * len(co_ords)
+        self.hits = [False] * len(body)
 
-    def co_ords_index(self, location):
+    def body_index(self, location):
         try:
-            return self.co_ords.index(location)
+            return self.body.index(location)
         except ValueError:
             return None
 
@@ -204,9 +206,20 @@ def game_board(width, height):
     print(header)
 # game_board = [["0" for x in range(10)] for y in range(10)]
 
+# def main():
+#     game_board(10, 10)
+#     battleship = [
+#         ships.build((1,2), 2, "U"),
+#         ships.build((5,8), 5, "U"),
+#         ships.build((2,3), 3, "E"),
+#     ]
 
-game_board(10, 10)
+#     for b in battleship:
+#         print(b.body)
+
+# main()
 # #game loop
+
 # play = True
 # while play and missle > 0:
 #     game_board(10,10)
@@ -223,3 +236,41 @@ game_board(10, 10)
 #         print(f"you have {missle} missles left.\n")
 #     else:
 #         print("You are out of missles.\n")
+def draw_ships(width, height, ships):
+    header = ("+" + "---" * width + "+")
+    print(header)
+
+    #empty game_board
+    game_board = []
+    for x in range(width):
+        row = []
+        for y in range(height):
+            row.append(None)
+        game_board.append(row)
+    
+    # add ships to board
+    for b in ships:
+        for x, y in b.body:
+            game_board[x][y] = "B"
+    
+    for y in range(height):
+        row = []
+        for x in range(width):
+            row.append(game_board[x][y]) or " "
+        print(" ".join(row))
+
+    print(header)
+
+
+
+if __name__ == "__main__":
+
+    battleship = [
+         ships.build((1,2), 2, "U"),
+         ships.build((5,8), 5, "U"),
+         ships.build((2,3), 3, "R"),
+     ]
+
+    for b in battleship:
+        print(b.body)
+    draw_ships(10, 10, ships)
