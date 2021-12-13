@@ -110,8 +110,25 @@ else:
     else:
         print(game_rules)
         time.sleep(2)
-        input("press ENTER to continue")
+        input("press ENTER to continue")  #give the user time to read over the rules
 
+
+class gameboard():
+    """
+    create a gameboard class used to initialize a fully operational
+    gameboard that has width, height and ships.
+    """
+
+    def __init__(self, width, height, all_ships):
+        """
+        define what makes a game board and create 
+        an array to store all the missle co ordinates fired
+        in the shots array.
+        """
+        self.width = width
+        self.height = height
+        self.all_ships = all_ships
+        self.shots = []
 
 class all_ships:
     """
