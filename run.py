@@ -237,7 +237,7 @@ def game_board(width, height):
 #     else:
 #         print("You are out of missles.\n")
 def draw_ships(width, height, ships):
-    header = ("+" + "---" * width + "+")
+    header = ("+" + "-" * width + "+")
     print(header)
 
     #empty game_board
@@ -251,13 +251,13 @@ def draw_ships(width, height, ships):
     # add ships to board
     for b in battleship:
         for x, y in b.body:
-            game_board[x][y] = "0"
+            game_board[x][y] = "B"
     
     for y in range(height):
         row = []
         for x in range(width):
             row.append(game_board[x][y] or " ")
-        print(" ".join(row))
+        print("¦" + "".join(row)+ "¦")
 
     print(header)
 
