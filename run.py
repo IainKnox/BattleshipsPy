@@ -130,6 +130,22 @@ class gameboard():
         self.all_ships = all_ships
         self.shots = []
 
+    def take_shots(self, shot_location):
+        """
+        update the various ships with hits and 
+        save the fact that a shot was either a Hit or Miss
+        """
+        pass
+
+    def is_game_over(self):
+        """
+        define what constitutes the game over conditions.
+        iterate through the ships and check if they have been 
+        destroyed.
+        """
+        pass
+
+
 class all_ships:
     """
     create a ship class used to build all ships from
