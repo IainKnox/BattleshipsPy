@@ -107,7 +107,12 @@ class all_ships:
             return self.co_ords.index(location)
         except ValueError:
             return None
+
     def is_sunk(self):
+        """
+        test the ship to see if all co-ords in the array have been hit
+        resulting in a sunk ship.
+        """
         return all(self.hits)
 
 
