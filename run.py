@@ -138,7 +138,16 @@ class gameboard(object):
         update the various ships with hits taken and
         save the fact that a shot was either a Hit or Miss
         """
-        pass
+        is_hit = False
+        for b in self.all_ships:
+            index = b.body.index(shot_location)  # return the index of the shot location
+            if index is not None:
+                is_hit = True
+                b.hits[index] = True
+                break
+
+        self.shots.append(Shots(shot_location, is_hit))
+
 
     def is_game_over(self):
         """
@@ -153,7 +162,7 @@ class Shots(object):
     create a simple class to store information regarding whether
     a shot location was a hit or not.
     """
-    def __init__(self,location, is_hit)
+    def __init__(self,location, is_hit):
         self.location = location
         self.is_hit = is_hit
 
@@ -275,4 +284,20 @@ if __name__ == "__main__":
 
     for b in battleship:
         print(b.body)
-    draw_ships(10, 10, ships)
+    draw_ships(10, 10, battleship)  #debug mode
+    game_board = gameboard(10, 10, battleship)
+    shots = [(1,1), (0,0), (2,1)]
+    for sh in shots:
+        game_board.take_shots(sh)
+
+    for sh in game_board.shots:
+        print(sh.location)
+        print(sh.is_hit)
+        print("---------")
+
+    for b in game_board.battleship:
+        print(b.body)
+        print(b.hits)
+        print("--------")
+    exit(0)
+
