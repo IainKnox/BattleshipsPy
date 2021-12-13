@@ -105,10 +105,12 @@ instructions = input("Would you like to review the game rules? Y or N\n").lower(
 while instructions != "y" and instructions != "n":
     instructions = input("\nCome again? Please enter y for yes or n for no.\n> ").lower()
 else:
-    if instructions == "y":
-        print("\nLooks like we are good to go.")    
+    if instructions == "n":
+        print("\nLooks like we are good to go.\n")    
     else:
         print(game_rules)
+        time.sleep(2)
+        input("press ENTER to continue")
 
 
 class all_ships:
