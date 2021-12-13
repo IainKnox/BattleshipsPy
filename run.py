@@ -16,6 +16,14 @@ Game structure:
 * the Missle firing phase would be checking miss vs hits and sink.
 * player starts with a set amount of missles to add a layer of difficulty
 * which are decremented irrespective of hit or miss.
+
+Legend:
+
+"B" - represents a section of the Battleship
+"H" - represents a hit
+"S" - represents sunk
+"M" - represents a miss
+"." - represents an water or a empty part of the ocean grid
 """
 
 
@@ -34,17 +42,37 @@ import random
 #TODO [ ] add some ASCII artwork to fancy it up
 
 
-print("Welcome to BattleshipsPY\n")
-name = input("Please enter you name Captain: \n")
+def valid_name(player):
+    """
+    create a function to validate the player's chosen name, ensuring
+    they have entered one and that it's not over 10 characters long.
+    """
+    if len(player) > 10:
+        print("Asked you not to go over 10 Characters!")
+        return False
+    elif len(name) == 0:
+        print("You'll need to speak up, didn't quite get that.")
+    else:
+        return True
 
-while name == "":
-    print("You'll need to speak up, didn't quite get that.")
-    name = input("Please enter your name Captain: \n")
-else:
-    print(f"alright {name}, let's prepare for war\n")
+
+def player():
+    """
+    create a player class that asks for a name, stored in a variable 
+    that is used to tell who's board is in play.
+    """
+    print("Welcome to BattleshipPY\n")
+    print("Enter the name of your Fleet: \n ")
+    while True:
+        player_name = input("Nothing too fancy mind, Maximum of 10 characters please.\n").upper()
+        if valid_name(player_name):
+            break
+    print(f"You shall be known as: {player_name}\n")
+    time.sleep(1)
+    print(f"Alright {player_name}, let's prepare for War!")
+    return player_name
 
 
-#instructions = input("Would you like to review the game instructions? Press Y or N\n").lower()
 # Rules taken from official Battleships documentation
 game_rules = """
     1) Be the first to sink all 5 of your opponents ships.
@@ -71,6 +99,16 @@ game_rules = """
     8) If you are the first player to sink your oppoents entire fleet,
         you win the game!
 """
+
+
+instructions = input("Would you like to review the game rules? Y or N\n").lower()
+while instructions != "y" and instructions != "n":
+    instructions = input("\nCome again? Please enter y for yes or n for no.\n> ").lower()
+else:
+    if instructions == "y":
+        print("\nLooks like we are good to go.")    
+    else:
+        print(game_rules)
 
 
 class all_ships:
