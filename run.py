@@ -39,7 +39,7 @@ import random
 #  TODO [x] define what a Battleship is. what's its name, how long is it?
 #  TODO [x] create an array to hold the Battleships
 #  TODO [ ] allow the player to place the ships on the grid.
-#  TODO [ ] define ship placement. starting position, grid boundries, illegal moves
+#  TODO [x] define ship placement. starting position, grid boundries, illegal moves
 #  TODO [ ] define hit, miss and sunk
 #  TODO [ ] define scoring, and a win or lose condition resulting in endgame.
 #  TODO [ ] add some ASCII artwork to fancy it up
@@ -53,7 +53,7 @@ def valid_name(player):
     if len(player) > 10:
         print("Asked you not to go over 10 Characters!")
         return False
-    elif len(name) == 0:
+    elif len(player) == 0:
         print("You'll need to speak up, didn't quite get that.")
     else:
         return True
@@ -116,13 +116,13 @@ else:
         input("press ENTER to continue\n")  # give the user time to read over the rules
 
 
-class gameboard():
+class gameboard(object):
     """
     create a gameboard class used to initialize a fully operational
     gameboard that has width, height and ships.
     """
 
-    def __init__(self, width, height, ships):
+    def __init__(self, width, height, all_ships):
         """
         define what makes a game board and create
         an array to store all the missle co ordinates fired
@@ -130,12 +130,12 @@ class gameboard():
         """
         self.width = width
         self.height = height
-        self.ships = ships
+        self.all_ships = all_ships 
         self.shots = []
 
     def take_shots(self, shot_location):
         """
-        update the various ships with hits and
+        update the various ships with hits taken and
         save the fact that a shot was either a Hit or Miss
         """
         pass
@@ -145,8 +145,17 @@ class gameboard():
         define what constitutes the game over conditions.
         iterate through the ships and check if they have been
         destroyed.
-        """
+        """ 
         pass
+
+class Shots(object):
+    """
+    create a simple class to store information regarding whether
+    a shot location was a hit or not.
+    """
+    def __init__(self,location, is_hit)
+        self.location = location
+        self.is_hit = is_hit
 
 
 class ships(object): 
@@ -176,9 +185,14 @@ class ships(object):
         # syntax for constucting a battleship --> b.ships.build((1,2), 2, "U")
 
     def __init__(self, body, direction):  #co-ords are the location of the ship object
+        """
+        create a function that stores information regarding hits taken
+        in terms of the length of the ship. With hits being changed
+        to True when a hit is registered. 
+        """ 
         self.body = body
         self.direction = direction
-        self.hits = [False] * len(body)
+        self.hits = [False] * len(body)  # eg[False][False][True] <-- represents 1 hit on a 3 block ship
 
     def body_index(self, location):
         try:
@@ -205,19 +219,6 @@ def game_board(width, height):
         print("¦" + "   " * width + "¦")
     print(header)
 # game_board = [["0" for x in range(10)] for y in range(10)]
-
-# def main():
-#     game_board(10, 10)
-#     battleship = [
-#         ships.build((1,2), 2, "U"),
-#         ships.build((5,8), 5, "U"),
-#         ships.build((2,3), 3, "E"),
-#     ]
-
-#     for b in battleship:
-#         print(b.body)
-
-# main()
 # #game loop
 
 # play = True
@@ -236,23 +237,24 @@ def game_board(width, height):
 #         print(f"you have {missle} missles left.\n")
 #     else:
 #         print("You are out of missles.\n")
+
 def draw_ships(width, height, ships):
     header = ("+" + "-" * width + "+")
     print(header)
 
-    #empty game_board
+    # empty game_board
     game_board = []
     for x in range(width):
         row = []
         for y in range(height):
             row.append(None)
         game_board.append(row)
-    
+
     # add ships to board
     for b in battleship:
         for x, y in b.body:
             game_board[x][y] = "B"
-    
+
     for y in range(height):
         row = []
         for x in range(width):
