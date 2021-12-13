@@ -249,14 +249,14 @@ def draw_ships(width, height, ships):
         game_board.append(row)
     
     # add ships to board
-    for b in ships:
+    for b in battleship:
         for x, y in b.body:
-            game_board[x][y] = "B"
+            game_board[x][y] = "0"
     
     for y in range(height):
         row = []
         for x in range(width):
-            row.append(game_board[x][y]) or " "
+            row.append(game_board[x][y] or " ")
         print(" ".join(row))
 
     print(header)
