@@ -26,20 +26,23 @@ Legend:
 "." - represents an water or a empty part of the ocean grid
 """
 
-
+from string import ascii_uppercase as letters
+letter = list(letters[:26])  # create a list of letters to use on the ocean grid.
+# look at possibility of user defining a board size to a max. of 26 letters
+missle = 10  # number of missles set when game is initialized, set to 10 for testing purposes
 import time
 import os
 import random
 
 
-#TODO [ ] define the 2 game phases. setup phase and missle firing phase
-#TODO [x] define what a Battleship is. what's its name, how long is it?
-#TODO [x] create an array to hold the Battleships
-#TODO [ ] allow the player to place the ships on the grid.
-#TODO [ ] define ship placement. starting position, grid boundries, illegal moves
-#TODO [ ] define hit, miss and sunk
-#TODO [ ] define scoring, and a win or lose condition resulting in endgame.
-#TODO [ ] add some ASCII artwork to fancy it up
+#  TODO [ ] define the 2 game phases. setup phase and missle firing phase
+#  TODO [x] define what a Battleship is. what's its name, how long is it?
+#  TODO [x] create an array to hold the Battleships
+#  TODO [ ] allow the player to place the ships on the grid.
+#  TODO [ ] define ship placement. starting position, grid boundries, illegal moves
+#  TODO [ ] define hit, miss and sunk
+#  TODO [ ] define scoring, and a win or lose condition resulting in endgame.
+#  TODO [ ] add some ASCII artwork to fancy it up
 
 
 def valid_name(player):
@@ -58,7 +61,7 @@ def valid_name(player):
 
 def player():
     """
-    create a player class that asks for a name, stored in a variable 
+    create a player class that asks for a name, stored in a variable
     that is used to tell who's board is in play.
     """
     print("Welcome to BattleshipPY\n")
@@ -106,11 +109,11 @@ while instructions != "y" and instructions != "n":
     instructions = input("\nCome again? Please enter y for yes or n for no.\n> ").lower()
 else:
     if instructions == "n":
-        print("\nLooks like we are good to go.\n")    
+        print("\nLooks like we are good to go.\n")  
     else:
         print(game_rules)
         time.sleep(2)
-        input("press ENTER to continue")  #give the user time to read over the rules
+        input("press ENTER to continue")  # give the user time to read over the rules
 
 
 class gameboard():
@@ -121,7 +124,7 @@ class gameboard():
 
     def __init__(self, width, height, all_ships):
         """
-        define what makes a game board and create 
+        define what makes a game board and create
         an array to store all the missle co ordinates fired
         in the shots array.
         """
@@ -132,7 +135,7 @@ class gameboard():
 
     def take_shots(self, shot_location):
         """
-        update the various ships with hits and 
+        update the various ships with hits and
         save the fact that a shot was either a Hit or Miss
         """
         pass
@@ -140,7 +143,7 @@ class gameboard():
     def is_game_over(self):
         """
         define what constitutes the game over conditions.
-        iterate through the ships and check if they have been 
+        iterate through the ships and check if they have been
         destroyed.
         """
         pass
@@ -151,7 +154,7 @@ class all_ships:
     create a ship class used to build all ships from
     a ship is constructed of a name/type, lenght, status(hit/destroyed)
     """
-    @staticmethod #create the build method on the class and not the instance
+    @staticmethod  # create the build method on the class and not the instance
     def build(start, lenght, direction):
         """
         each instance of the all_ship class has a starting point,
@@ -159,18 +162,18 @@ class all_ships:
         """
         co_ords = []
         for i in range(length):
-            if direction == "U": #up
-                body = (start[0], start[1] -1) #minus 1 from y co-ord
-            elif direction == "D": #down
-                body = (start[0], start[1] +1) #add 1 to y co-ord
-            elif direction == "L": #left
-                body = (start[0] -1, start[1]) #minus 1 from x co-ord
-            elif direction == "R": #right
-                body = (start[0] +1, start[1]) #add 1 to x co-ord
+            if direction == "U":  #up
+                body = (start[0], start[1] -1)  #minus 1 from y co-ord
+            elif direction == "D":  #down
+                body = (start[0], start[1] +1)  #add 1 to y co-ord
+            elif direction == "L":  #left
+                body = (start[0] -1, start[1])  #minus 1 from x co-ord
+            elif direction == "R":  #right
+                body = (start[0] +1, start[1])  #add 1 to x co-ord
             co_ords.append(body)
         return all_ships(co_ords, direction)
 
-    def __init__(self, co_ords, direction): #co-ords are the location of the ship object
+    def __init__(self, co_ords, direction):  #co-ords are the location of the ship object
         self.co_ords = co_ords
         self.direction = direction
         self.hits = [False] * len(co_ords)
@@ -189,22 +192,6 @@ class all_ships:
         return all(self.hits)
 
 
-
-
-# game_board = [["¦  ¦"for x in range(8)] for y in range(8)]
-# for i in game_board:
-#     print("\033[1;32;40m --   --   --   --   --   --   --   --")
-#     print(" ".join(i))
-#     print(" --   --   --   --   --   --   --   --\033[0;37;40m")
-
-
-from string import ascii_uppercase as letters
-letter = list(letters[:10]) #create a list of letters to use on the ocean grid.
-# look at possibility of user defining a board size to a max. of 26 letters
-
-
-missle = 10 # number of missles set when game is initialized, set to 10 for testing purposes
-
 def game_board(width, height):
 
     print("+ " + "  ".join(letter) + " +")
@@ -215,20 +202,10 @@ def game_board(width, height):
     for i in range(height):
         print("¦" + "   " * width + "¦")
     print(header)
-
 # game_board = [["0" for x in range(10)] for y in range(10)]
 
+
 game_board(10, 10)
-
-
-
-
-
-
-
-
-
-
 # #game loop
 # play = True
 # while play and missle > 0:
