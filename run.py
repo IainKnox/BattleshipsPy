@@ -140,7 +140,7 @@ class gameboard(object):
         """
         is_hit = False
         for b in self.all_ships:
-            index = b.body.index(shot_location)  # return the index of the shot location
+            index = b.body_index(shot_location)  # return the index of the shot location
             if index is not None:
                 is_hit = True
                 b.hits[index] = True
@@ -217,16 +217,16 @@ class ships(object):
         return all(self.hits)
 
 
-def game_board(width, height):
+# def game_board(width, height):
 
-    print("+ " + "  ".join(letter) + " +")
-    header = ("+" + "---" * width + "+")
-    print(header)
-    game_board = []
+#     print("+ " + "  ".join(letter) + " +")
+#     header = ("+" + "---" * width + "+")
+#     print(header)
+#     game_board = []
 
-    for i in range(height):
-        print("¦" + "   " * width + "¦")
-    print(header)
+#     for i in range(height):
+#         print("¦" + "   " * width + "¦")
+#     print(header)
 # game_board = [["0" for x in range(10)] for y in range(10)]
 # #game loop
 
@@ -246,6 +246,24 @@ def game_board(width, height):
 #         print(f"you have {missle} missles left.\n")
 #     else:
 #         print("You are out of missles.\n")
+
+def draw_board(width, height, shots):
+    header = ("+" + "-" * width + "+")
+    print(header)
+
+    shots_set = set(shots)
+    for y in range(height):
+        row = []
+        for x in range(width):
+            if (x,y) in shots_set:
+                ch = "X"
+            else:
+                ch = " "
+            row.append(ch)
+        print("¦" + "".join(row) + "¦")
+    print(header)
+
+
 
 def draw_ships(width, height, ships):
     header = ("+" + "-" * width + "+")
@@ -284,20 +302,22 @@ if __name__ == "__main__":
 
     for b in battleship:
         print(b.body)
-    draw_ships(10, 10, battleship)  #debug mode
+    draw_ships(10, 10, battleship)   #debug mode
+    
     game_board = gameboard(10, 10, battleship)
-    shots = [(1,1), (0,0), (2,1)]
+    shots = [(1,1), (0,0), (5,7)]
     for sh in shots:
         game_board.take_shots(sh)
 
-    for sh in game_board.shots:
-        print(sh.location)
-        print(sh.is_hit)
-        print("---------")
+    # for sh in game_board.shots:
+    #     print(sh.location)  #ship location
+    #     print(sh.is_hit)    #ship hits
+    #     print("---------")
 
-    for b in game_board.battleship:
-        print(b.body)
-        print(b.hits)
-        print("--------")
+    # for b in game_board.battleship:
+    #     print(b.body)   #battleships
+    #     print(b.hits)   #battleship hits
+    #     print("--------")
+    draw_board(10, 10, shots) #debug mode
     exit(0)
 
