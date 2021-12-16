@@ -247,50 +247,61 @@ class ships(object):
 #     else:
 #         print("You are out of missles.\n")
 
-def draw_board(width, height, shots):
-    header = ("+" + "-" * width + "+")
-    print(header)
-
-    shots_set = set(shots)
-    for y in range(height):
-        row = []
-        for x in range(width):
-            if (x,y) in shots_set:
-                ch = "X"
-            else:
-                ch = " "
-            row.append(ch)
-        print("¦" + "".join(row) + "¦")
-    print(header)
-
-
-
-def draw_ships(width, height, ships):
+def draw_board(gameboard, show_ships=False):
     header = ("+" + "-" * width + "+")
     print(header)
 
     # empty game_board
     game_board = []
-    for x in range(width):
-        row = []
-        for y in range(height):
-            row.append(None)
-        game_board.append(row)
+    for x in range(game_board.width):
+        game_board.append([None for y in range(game_board.height)])
 
-    # add ships to board
-    for b in battleship:
-        for x, y in b.body:
-            game_board[x][y] = "B"
-
-    for y in range(height):
+    if show_ships:
+        # add ships to board
+        for b in game_board.battleship:
+            for x, y in b.body:
+                game_board[x][y] = "B"
+    
+    # add shots to the board
+    for sh in game_board.shots:
+        x, y = shot_location
+        if is_hit:
+            ch = "X"
+        else:
+            ch = "."
+            game_board[x][y] = ch
+            
+    for y in range(game_board.height):
         row = []
-        for x in range(width):
+        for x in range(game_board.width):
             row.append(game_board[x][y] or " ")
         print("¦" + "".join(row)+ "¦")
-
     print(header)
 
+# def draw_ships(width, height, ships):
+#     header = ("+" + "-" * width + "+")
+#     print(header)
 
+#     # empty game_board
+#     game_board = []
+#     for x in range(width):
+#         row = []
+#         for y in range(height):
+#             row.append(None)
+#         game_board.append(row)
+
+#     # add ships to board
+#     for b in battleship:
+#         for x, y in b.body:
+#             game_board[x][y] = "B"
+
+#     for y in range(height):
+#         row = []
+#         for x in range(width):
+#             row.append(game_board[x][y] or " ")
+#         print("¦" + "".join(row)+ "¦")
+
+#     print(header)
 
 if __name__ == "__main__":
 
@@ -299,25 +310,22 @@ if __name__ == "__main__":
          ships.build((5,8), 5, "U"),
          ships.build((2,3), 3, "R"),
      ]
-
-    for b in battleship:
-        print(b.body)
-    draw_ships(10, 10, battleship)   #debug mode
     
-    game_board = gameboard(10, 10, battleship)
+    game_board = gameboard(battleship, 10, 10)
+
     shots = [(1,1), (0,0), (5,7)]
     for sh in shots:
         game_board.take_shots(sh)
 
-    # for sh in game_board.shots:
-    #     print(sh.location)  #ship location
-    #     print(sh.is_hit)    #ship hits
-    #     print("---------")
+    for sh in game_board.shots:
+        print(sh.location)  #ship location
+        print(sh.is_hit)    #ship hits
+        print("---------")
 
-    # for b in game_board.battleship:
-    #     print(b.body)   #battleships
-    #     print(b.hits)   #battleship hits
-    #     print("--------")
-    draw_board(10, 10, shots) #debug mode
+    for b in game_board.battleship:
+        print(b.body)   #battleships
+        print(b.hits)   #battleship hits
+        print("--------")
+
+    draw_board(10,10,game_board.shots)
     exit(0)
-
