@@ -169,7 +169,12 @@ As mentioned in the **content** section, there were countless resources I scoure
  * If the user selects a coordinate that is outside the range of the grid/game board, this will cause the program to crash. There are no evaluation in place to test input against the limits of the board.
  * The amount of missles the player starts with will decrease by 2 instead of one, as the program does not tally the human player and the computer player seperately.
  * As the battleships are hardcoded into the grid, the player can easily beat the game. I could not get the random coordinates to generate properly.
+ * A byproduct of this, is that as there are no validations in place, ships can cross each other, or be placed through the grid.
  * The row and column numbers do not display on the sides of the boards so players will be unable to make clear choices for launch coordinates, as I had issue having them iterate correctly.
+
+ ## PEP8 Testing
+ * All the code was checked via the PEP8 python validator and passed.
+ * ![PEP8](assets/images/PEP8-validation.png)
 
 <hr>
 <p>&nbsp</p>
