@@ -37,6 +37,34 @@ shot_count = 10  # no of missles when game starts, 10 for testing purposes
 ship_sunk = 0
 
 
+# Rules taken from official Battleships documentation
+game_rules = """
+    1) Be the first to sink all 5 of your opponents ships.
+    2) Place a fleet of 5 ships across the ocean grid.
+        Rules for placing ships:
+        2.1) Place each ship in any horizontal or vertical line,
+             but not diagonally.
+        2.2) Do not place a ship so that it overlaps another ship,
+             or the edge of the grid.
+        2.3) Do not change the position of ship once the 
+             game has begun.
+    3) You and your opponent will alternate turns, calling out
+        one shot per turn to try and Hit each others ships.
+    4) On your turn, designate a co-ordinate to fire upon.
+        For example D-5. Your opponent will confirm whether 
+        the shot is a Hit or Miss.
+    5) If you call a shot occupied by your opponents ocean grid,
+        it is considered a Hit. You opponent will confirm which vessel
+        is hit and mark with a 'H'
+    6) If you call a shot not occupied by your opponent ocean grid,
+        it is considered a Miss. This is marked with a '~'
+    7) Once all the co-ordinates of any one ship have been Hit, it is 
+        considered as Sunk.
+    8) If you are the first player to sink your opponents entire fleet,
+        you win the game!
+"""
+
+
 class Oceangrid:
     """
     create a ocean grid/game board class used to initialize a fully operational
@@ -148,6 +176,7 @@ class Battleship:
         test the ship to see if all co-ords in the array have been hit
         resulting in a sunk ship.
         """
+        ship_sunk = 0
         return all(self.hits)
         ships_sunk += 1
 
@@ -182,7 +211,7 @@ def create_player():
     that is used to tell who's board is in play.
     """
     print("Welcome to BattleshipPY\n")
-    print("Enter the name of your Fleet: \n ")
+    print("Please enter your name: \n ")
     while True:
         player_name = input("Nothing too fancy mind, Max 10 characters.\n").upper()
         if valid_name(player_name):
@@ -242,6 +271,7 @@ def draw_board(game_board, debug_mode=True):
     debugging by setting the value to True.
     """
     header = ("+" + "-" * game_board.width + "+")
+    
     print(header)
 
     # empty game_board
@@ -278,7 +308,7 @@ def draw_board(game_board, debug_mode=True):
     for sh in game_board.missles:
         x, y = sh.location
         if sh.is_hit:
-            m = "X"
+            m = "H"
         else:
             m = "~"
         board[x][y] = m
@@ -292,6 +322,20 @@ def draw_board(game_board, debug_mode=True):
 
 
 if __name__ == "__main__":
+    
+    instructions = input("Would you like to review the game rules? Y or N\n").lower()
+    while instructions != "y" and instructions != "n":
+        instructions = input("\nCome again? Enter y for yes or n for no.\n> ").lower()
+    else:
+        if instructions == "n":
+            print("\nLooks like we are good to go.\n")
+        else:
+            print(game_rules)
+            time.sleep(2)
+            # give the user time to read over the rules
+            input("press ENTER to continue\n")
+            os.system("clear")
+
     battleships = [
         Battleship.build((1, 1), 2, "U"),
         Battleship.build((5, 8), 5, "U"),
@@ -314,8 +358,7 @@ if __name__ == "__main__":
         defending_index = (attacking_index + 1) % 2
         defending_board = two_player[defending_index]
         attacking_player = players[attacking_index]
-        print(defending_index)
-        print(attacking_index)
+        
 
         events("player_turn", {"Player": attacking_player.name})
         print(f"%s, you have {shot_count} missles." % attacking_player.name)
