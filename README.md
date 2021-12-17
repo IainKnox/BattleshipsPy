@@ -172,6 +172,7 @@ As mentioned in the **content** section, there were countless resources I scoure
  * A byproduct of this, is that as there are no validations in place, ships can cross each other, or be placed through the grid.
  * The row and column numbers do not display on the sides of the boards so players will be unable to make clear choices for launch coordinates, as I had issue having them iterate correctly.
 
+
  ## PEP8 Testing
  * All the code was checked via the PEP8 python validator and passed.
  * ![PEP8](assets/images/PEP8-validation.png)
