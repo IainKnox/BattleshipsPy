@@ -22,27 +22,144 @@ Legend:
 "B" - represents a section of the Battleship
 "H" - represents a hit
 "S" - represents sunk
-"M" - represents a miss
-"." - represents an water or a empty part of the ocean grid
+"~" - represents a miss
+"~" - represents an water or a empty part of the ocean grid
 """
-
-from string import ascii_uppercase as letters
-letter = list(letters[:10])  # create a list of letters to use on the ocean grid.
-# look at possibility of user defining a board size to a max. of 26 letters
-missle = 10  # number of missles set when game is initialized, set to 10 for testing purposes
 import time
 import os
 import random
+import copy
+from string import ascii_uppercase as letters
+letter = list(letters[:10])
+# create a list of letters for ocean grid.
+# look at possibility of user defining a board size to a max. of 26 letters
+shot_count = 10  # no of missles when game starts, 10 for testing purposes
+ship_sunk = 0
 
 
-#  TODO [ ] define the 2 game phases. setup phase and missle firing phase
-#  TODO [x] define what a Battleship is. what's its name, how long is it?
-#  TODO [x] create an array to hold the Battleships
-#  TODO [ ] allow the player to place the ships on the grid.
-#  TODO [x] define ship placement. starting position, grid boundries, illegal moves
-#  TODO [ ] define hit, miss and sunk
-#  TODO [ ] define scoring, and a win or lose condition resulting in endgame.
-#  TODO [ ] add some ASCII artwork to fancy it up
+class Oceangrid:
+    """
+    create a ocean grid/game board class used to initialize a fully operational
+    board that has width, height and ships.
+    """
+
+    def __init__(self, battleships, width, height):
+        """
+        define what makes a game board and create
+        an array to store all the missle co ordinates fired
+        in the shots array.
+        """
+        self.battleships = battleships
+        self.missles = []
+        self.width = width
+        self.height = height
+
+    def shoot(self, missle_location):
+        # take shots
+        """
+        update the various ships with hits taken and
+        save the fact that a shot was either a Hit or Miss
+        """
+        hit_battleship = None
+        is_hit = False
+        for b in self.battleships:
+            index = b.body_index(missle_location)  # index of the shot location
+            if index is not None:
+                is_hit = True
+                b.hits[index] = True
+                hit_battleship = b
+                break
+
+        self.missles.append(Hits(missle_location, is_hit))
+        return hit_battleship
+
+    def is_game_over(self):
+        """
+        define what constitutes the game over conditions.
+        iterate through the ships and check if they have been
+        destroyed.
+        """
+        for b in self.battleships:
+            if not b.is_sunk():
+                return False
+            return True
+
+
+class Hits:
+    # shots
+    """
+    create a simple class to store information regarding whether
+    a missle location was a hit or not.
+    """
+    def __init__(self, location, is_hit):
+        self.location = location
+        self.is_hit = is_hit
+
+
+class Battleship:
+    """
+    create a ship class used to build all ships from
+    a ship is constructed of a name/type, lenght, status(hit/destroyed)
+    """
+    @staticmethod  # create the build method on the class and not the instance
+    def build(start, length, direction):
+        """
+        each instance of the all_ship class has a starting point,
+        a lenght and a direction
+        """
+        body = []
+        for i in range(length):
+            # up minus 1 from y co-ord
+            if direction == "U":
+                part = (start[0], start[1] - i)
+            # down add 1 to y co-ord
+            elif direction == "D":
+                part = (start[0], start[1] + i)
+            # left  minus 1 from x co-ord
+            elif direction == "L":
+                part = (start[0] - i, start[1])
+            # right add 1 to x co-ord
+            elif direction == "R":
+                part = (start[0] + i, start[1])
+
+            body.append(part)
+        return Battleship(body, direction)
+        # syntax for constucting a battleship --> b.ships.build((1,2), 2, "U")
+
+    def __init__(self, body, direction):  # co-ords for location of ship object
+        """
+        create a function that stores information regarding hits taken
+        in terms of the length of the ship. With hits being changed
+        to True when a hit is registered.
+        """
+        self.body = body
+        self.direction = direction
+        self.hits = [False] * len(body)
+        # eg[False][False][True] <-- represents 1 hit on a 3 block ship
+
+    def body_index(self, location):
+        try:
+            return self.body.index(location)
+        except ValueError:
+            return None
+
+    def is_sunk(self):
+        """
+        test the ship to see if all co-ords in the array have been hit
+        resulting in a sunk ship.
+        """
+        return all(self.hits)
+        ships_sunk += 1
+
+
+class Player:
+    """
+    create a player class to define the various players and control
+    the flow of moves to progress the game.
+    """
+    def __init__(self, name, moves):
+        self.name = name
+        self.moves = moves
 
 
 def valid_name(player):
@@ -59,7 +176,7 @@ def valid_name(player):
         return True
 
 
-def player():
+def create_player():
     """
     create a player class that asks for a name, stored in a variable
     that is used to tell who's board is in play.
@@ -67,7 +184,7 @@ def player():
     print("Welcome to BattleshipPY\n")
     print("Enter the name of your Fleet: \n ")
     while True:
-        player_name = input("Nothing too fancy mind, Maximum of 10 characters please.\n").upper()
+        player_name = input("Nothing too fancy mind, Max 10 characters.\n").upper()
         if valid_name(player_name):
             break
     print(f"You shall be known as: {player_name}\n")
@@ -76,256 +193,150 @@ def player():
     return player_name
 
 
-# Rules taken from official Battleships documentation
-game_rules = """
-    1) Be the first to sink all 5 of your opponents ships.
-    2) Place a fleet of 5 ships across the ocean grid.
-        Rules for placing ships:
-        2.1) Place each ship in any horizontal or vertical line,
-             but not diagonally.
-        2.2) Do not place a ship so that it overlaps another ship,
-             or the edge of the grid.
-        2.3) Do not change the position of ship once the 
-             game has begun.
-    3) You and your opponent will alternate turns, calling out
-        one shot per turn to try and Hit each others ships.
-    4) On your turn, designate a co-ordinate to fire upon.
-        For example D-5. Your opponent will confirm whether 
-        the shot is a Hit or Miss.
-    5) If you call a shot occupied by your opponents ocean grid,
-        it is considered a Hit. You opponent will confirm which vessel
-        is hit and mark with a red 'H'
-    6) If you call a shot not occupied by your opponent ocean grid,
-        it is considered a Miss. This is marked with a blue 'M'
-    7) Once all the co-ordinates of any one ship have been Hit, it is 
-        considered as Sunk and all 'H' markers are changed to 'S'.
-    8) If you are the first player to sink your oppoents entire fleet,
-        you win the game!
-"""
-
-
-instructions = input("Would you like to review the game rules? Y or N\n").lower()
-while instructions != "y" and instructions != "n":
-    instructions = input("\nCome again? Please enter y for yes or n for no.\n> ").lower()
-else:
-    if instructions == "n":
-        print("\nLooks like we are good to go.\n")
-    else:
-        print(game_rules)
-        time.sleep(2)
-        input("press ENTER to continue\n")  # give the user time to read over the rules
-
-
-class gameboard(object):
+def events(event_type, metadata):
     """
-    create a gameboard class used to initialize a fully operational
-    gameboard that has width, height and ships.
+    create a function for handling the various events
+    that occur during the gamecfor example game over
+    , sinking ships, hits and misses
     """
-
-    def __init__(self, width, height, all_ships):
-        """
-        define what makes a game board and create
-        an array to store all the missle co ordinates fired
-        in the shots array.
-        """
-        self.width = width
-        self.height = height
-        self.all_ships = all_ships 
-        self.shots = []
-
-    def take_shots(self, shot_location):
-        """
-        update the various ships with hits taken and
-        save the fact that a shot was either a Hit or Miss
-        """
-        is_hit = False
-        for b in self.all_ships:
-            index = b.body_index(shot_location)  # return the index of the shot location
-            if index is not None:
-                is_hit = True
-                b.hits[index] = True
-                break
-
-        self.shots.append(Shots(shot_location, is_hit))
+    if event_type == "game_over":
+        print("%s Congratulations, you are Victorious!" % metadata["Player"])
+        print(f"You sunk {ship_sunk} ships")
+    elif event_type == "player_turn":
+        print("%s, it's your turn." % metadata["Player"])
+    elif event_type == "ship_sunk":
+        print("%s, Destroyed a Ship!!." % metadata["Player"])
+    elif event_type == "ship_hit":
+        print("%s, you HIT a ship!" % metadata["Player"])
+    elif event_type == "miss":
+        print("%s, you MISSED." % metadata["Player"])
 
 
-    def is_game_over(self):
-        """
-        define what constitutes the game over conditions.
-        iterate through the ships and check if they have been
-        destroyed.
-        """ 
-        pass
-
-class Shots(object):
+def computer_move(game_board):
     """
-    create a simple class to store information regarding whether
-    a shot location was a hit or not.
+    create a function that defines a very basic version of
+    an AI player as the opponent using the random library to move
     """
-    def __init__(self,location, is_hit):
-        self.location = location
-        self.is_hit = is_hit
+    x = random.randint(0, game_board.width - 1)
+    y = random.randint(0, game_board.height - 1)
+    return (x, y)
 
 
-class ships(object): 
+def player_move(game_board):
     """
-    create a ship class used to build all ships from
-    a ship is constructed of a name/type, lenght, status(hit/destroyed)
+    create a function that defines the human moves on the opponent
+    board.
     """
-    @staticmethod  # create the build method on the class and not the instance
-    def build(start, length, direction):
-        """
-        each instance of the all_ship class has a starting point,
-        a lenght and a direction
-        """
-        body = []
-        for i in range(length):
-            if direction == "U":  #up
-                part = (start[0], start[1] -i)  #minus 1 from y co-ord
-            elif direction == "D":  #down
-                part = (start[0], start[1] +i)  #add 1 to y co-ord
-            elif direction == "L":  #left
-                part = (start[0] -i, start[1])  #minus 1 from x co-ord
-            elif direction == "R":  #right
-                part = (start[0] +i, start[1])  #add 1 to x co-ord
-
-            body.append(part)
-        return ships(body, direction)
-        # syntax for constucting a battleship --> b.ships.build((1,2), 2, "U")
-
-    def __init__(self, body, direction):  #co-ords are the location of the ship object
-        """
-        create a function that stores information regarding hits taken
-        in terms of the length of the ship. With hits being changed
-        to True when a hit is registered. 
-        """ 
-        self.body = body
-        self.direction = direction
-        self.hits = [False] * len(body)  # eg[False][False][True] <-- represents 1 hit on a 3 block ship
-
-    def body_index(self, location):
-        try:
-            return self.body.index(location)
-        except ValueError:
-            return None
-
-    def is_sunk(self):
-        """
-        test the ship to see if all co-ords in the array have been hit
-        resulting in a sunk ship.
-        """
-        return all(self.hits)
+    fire_missle = input("Enter your launch co-ordinates: (eg. 1,1)\n")
+    xstr, ystr = fire_missle.split(",")
+    x = int(xstr)
+    y = int(ystr)
+    return (x, y)
 
 
-# def game_board(width, height):
-
-#     print("+ " + "  ".join(letter) + " +")
-#     header = ("+" + "---" * width + "+")
-#     print(header)
-#     game_board = []
-
-#     for i in range(height):
-#         print("¦" + "   " * width + "¦")
-#     print(header)
-# game_board = [["0" for x in range(10)] for y in range(10)]
-# #game loop
-
-# play = True
-# while play and missle > 0:
-#     game_board(10,10)
-
-#create an input for user to enter co-ordinates to fire missle at
-# based on difficulty, the player will have a set number of shots eg. 75/50/25
-# built functionality around whether missles hit, miss or sink opponents ships
-#     if missle > 0:
-#         fire_missle = input(" Enter launch co-ordinate (eg.A4): \n")
-#         x, y = fire_missle.split(",")
-#         #firing sequence letter then number (A,4)
-#         game_board[int(fire_missle[1])-1][letter.index(fire_missle[0])] = "x"
-#         missle =-1
-#         print(f"you have {missle} missles left.\n")
-#     else:
-#         print("You are out of missles.\n")
-
-def draw_board(gameboard, show_ships=False):
-    header = ("+" + "-" * width + "+")
+def draw_board(game_board, debug_mode=True):
+    """
+    creates a function that calls on the Oceangrid class, defines the
+    width and height of the Oceangrid and populates the game board.
+    The debug mode feature allows the user to diplay the ships for easy
+    debugging by setting the value to True.
+    """
+    header = ("+" + "-" * game_board.width + "+")
     print(header)
 
     # empty game_board
-    game_board = []
+    board = []
     for x in range(game_board.width):
-        game_board.append([None for y in range(game_board.height)])
+        board.append([None for y in range(game_board.height)])
 
-    if show_ships:
-        # add ships to board
-        for b in game_board.battleship:
-            for x, y in b.body:
-                game_board[x][y] = "B"
-    
-    # add shots to the board
-    for sh in game_board.shots:
-        x, y = shot_location
-        if is_hit:
-            ch = "X"
+    # add ships to board
+    if debug_mode:
+        for b in game_board.battleships:
+            for d, (x, y) in enumerate(b.body):
+                # add a bit of styling to the ships
+                # based on the direction their pointing
+                if b.direction == "U":
+                    parts = ("v", "|", "^")
+                elif b.direction == "D":
+                    parts = ("^", "|", "v")
+                elif b.direction == "L":
+                    parts = (">", "=", "<")
+                elif b.direction == "R":
+                    parts = ("<", "=", ">")
+                else:
+                    raise "Your compass be broke!"
+                if d == 0:
+                    part = parts[0]
+                elif d == len(b.body) - 1:
+                    part = parts[2]
+                else:
+                    part = parts[1]
+
+                board[x][y] = part
+
+    # add missles to the board
+    for sh in game_board.missles:
+        x, y = sh.location
+        if sh.is_hit:
+            m = "X"
         else:
-            ch = "."
-            game_board[x][y] = ch
-            
+            m = "~"
+        board[x][y] = m
+
     for y in range(game_board.height):
         row = []
         for x in range(game_board.width):
-            row.append(game_board[x][y] or " ")
-        print("¦" + "".join(row)+ "¦")
+            row.append(board[x][y] or " ")
+        print("¦" + "".join(row) + "¦")
     print(header)
 
-# def draw_ships(width, height, ships):
-#     header = ("+" + "-" * width + "+")
-#     print(header)
-
-#     # empty game_board
-#     game_board = []
-#     for x in range(width):
-#         row = []
-#         for y in range(height):
-#             row.append(None)
-#         game_board.append(row)
-
-#     # add ships to board
-#     for b in battleship:
-#         for x, y in b.body:
-#             game_board[x][y] = "B"
-
-#     for y in range(height):
-#         row = []
-#         for x in range(width):
-#             row.append(game_board[x][y] or " ")
-#         print("¦" + "".join(row)+ "¦")
-
-#     print(header)
 
 if __name__ == "__main__":
+    battleships = [
+        Battleship.build((1, 1), 2, "U"),
+        Battleship.build((5, 8), 5, "U"),
+        Battleship.build((2, 3), 3, "R"),
+    ]  # hardcoded for debugging
 
-    battleship = [
-         ships.build((1,2), 2, "U"),
-         ships.build((5,8), 5, "U"),
-         ships.build((2,3), 3, "R"),
-     ]
-    
-    game_board = gameboard(battleship, 10, 10)
+    two_player = [      # creates 2 game boards
+        Oceangrid(battleships, 10, 10),
+        Oceangrid(copy.deepcopy(battleships), 10, 10)  # create copy
+    ]
 
-    shots = [(1,1), (0,0), (5,7)]
-    for sh in shots:
-        game_board.take_shots(sh)
+    players = [
+        Player(create_player(), player_move),   # human player
+        Player("Monty", computer_move)             # computer player
+    ]
 
-    for sh in game_board.shots:
-        print(sh.location)  #ship location
-        print(sh.is_hit)    #ship hits
-        print("---------")
+    attacking_index = 0
 
-    for b in game_board.battleship:
-        print(b.body)   #battleships
-        print(b.hits)   #battleship hits
-        print("--------")
+    while True:
+        defending_index = (attacking_index + 1) % 2
+        defending_board = two_player[defending_index]
+        attacking_player = players[attacking_index]
+        print(defending_index)
+        print(attacking_index)
 
-    draw_board(10,10,game_board.shots)
-    exit(0)
+        events("player_turn", {"Player": attacking_player.name})
+        print(f"%s, you have {shot_count} missles." % attacking_player.name)
+        missle_location = attacking_player.moves(defending_board)
+
+        hit_battleship = defending_board.shoot(missle_location)
+        if hit_battleship is None:
+            events("miss", {"Player": attacking_player.name})
+            shot_count -= 1
+
+        else:
+            if hit_battleship.is_sunk():
+                events("ship_sunk", {"Player": attacking_player.name})
+                ship_sunk += 1
+            else:
+                events("ship_hit", {"Player": attacking_player.name})
+                shot_count -= 1
+        draw_board(defending_board)
+
+        if defending_board.is_game_over():
+            events("game_over", {"Player": attacking_player.name})
+            break
+
+        attacking_index = defending_index
