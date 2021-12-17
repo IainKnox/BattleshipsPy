@@ -73,42 +73,6 @@ Legend:
     <hr>
 <p>&nbsp</p>
 
-## Testing 1.0
-Throughout this project I have done regular testing. And have reloaded and refreshed the pages multiple times after each addition and modification. Various bugs were found in terms of characters, grids, ships not displaying correctly, positioning. Mostly through searching on external sites such as stackoverflow, I was only able to deal with a few of the many bugs I encountered.
-
-A fair amount of time was spend understanding how the python ran, working out the game logic and implementation thereof.
-
-
-
-### Validation results - W3C Validator
-All pages where tested through the W3C html validator and passed. Links to the results for each page are as follows;
-* index.html Validation  [Index HTML Validator](assets/images/readme-imgs/index-html-validation.jpg)
-* instructions.html Validation  [Instructions HTML Validator](assets/images/readme-imgs/instructions-html-validation.jpg)
-* tetris.html Validation   [Tetris HTML Validator](assets/images/readme-imgs/tetris-html.validation.jpg)
-* scores.html Validation  [Scores HTML Validator](assets/images/readme-imgs/scores-html-validation.png)
-
-### Validating results -  JSHint Validator
-All javascript was passed through the JSHint validator with ES6 included [JS Validator](assets/images/readme-imgs/jsHint-validator.png)
-
-### Validation results - CSS Validator
-All pages where tested through the W3C css validator and passed. Links to the results for each page are as follows;
-tetris-javascript Validation  [CSS Validator](assets/images/readme-imgs/css-validation.jpg)
-Site fluidity
-To test the flow of the site I forwarded it on to my spouse and work colleagues. Grammarly was also used to test the various pages for any spelling and grammar errors.
-
-### Browser Compatibility
-I tested the compatibility of my site first by by emulating different devices using the Dev tools in Chrome as well as using the variable responsive setting to check at different breakpoints.
-
-The various tests that were run were:
-* checking to see if the all images and buttons and panels scaled and maintained aspect ratio as the display shrunk and grew.
-* checking to see if responsive elements within my layout changed at the correct breakpoints, such as the navbar and toggle.
-* checking to see if my media queries behaved as expected with regards to navigation toggle displaying in rows when in mobile navigation.
-* I then tested it on different browsers. I have tested in Chrome, Firefox and Edge. Once I was sure my project worked on windows 10, I then opened it on my phone running Safari on IOS 15.
-<hr>
-<p>&nbsp</p>
-
-
-
 ## Deployment
 I have hosted my project on github pages, it can be accessed from the following url:
 [BattleshipPY](https://github.com/IainKnox/BattleshipsPy) 
@@ -117,7 +81,7 @@ The deployment process was done via GitHub Pages. From the Github Pages tab, I f
  * Ensured that the **main** branch was selected as the **source**  from which it was built.
  *  I then selected **save** at which point Github alerted me that the site was ready to be published at the provided address(linked above).
  * Secondly it was deployed to Heroku and can be accessed from the following url:
- [BattleshipPY](https://ik-battleships-py.herokuapp.com/)
+[BattleshipPY](https://ik-battleships-py.herokuapp.com/)
 
 
 As this project was developed to be accessed via a terminal window, It was done so using the Code Institute template provided which simulates a terminal in a web browser. The project was deployed to Heroku using the below procedure:-
@@ -178,5 +142,3 @@ As mentioned in the **content** section, there were countless resources I scoure
  * ![PEP8](assets/images/PEP8-validation.png)
 
 <hr>
-<p>&nbsp</p>
- 
