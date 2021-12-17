@@ -141,6 +141,36 @@ class Battleship:
         """
         return all(self.hits)
 
+    
+def valid_name(player):
+    """
+    create a function to validate the player's chosen name, ensuring
+    they have entered one and that it's not over 10 characters long.
+    """
+    if len(player) > 10:
+        print("Asked you not to go over 10 Characters!")
+        return False
+    elif len(player) == 0:
+        print("You'll need to speak up, didn't quite get that.")
+    else:
+        return True
+
+def create_player():
+    """
+    create a player class that asks for a name, stored in a variable
+    that is used to tell who's board is in play.
+    """
+    print("Welcome to BattleshipPY\n")
+    print("Enter the name of your Fleet: \n ")
+    while True:
+        player_name = input("Nothing too fancy mind, Maximum of 10 characters please.\n").upper()
+        if valid_name(player_name):
+            break
+    print(f"You shall be known as: {player_name}\n")
+    time.sleep(1)
+    print(f"Alright {player_name}, let's prepare for War!")
+    return player_name
+
 
 def draw_board(game_board, debug_mode = False):
     header = ("+" + "-" * game_board.width + "+")
@@ -181,12 +211,18 @@ if __name__ == "__main__":
         #  Battleship.build((2,3), 3, "R"),
     ]  # hardcoded for debugging
 
-    two_player = [
+    two_player = [      # creates 2 game boards
         Oceangrid(battleships, 10, 10),
-        Oceangrid(copy.deepcopy(battleships), 10, 10)
+        Oceangrid(copy.deepcopy(battleships), 10, 10)  # make a copy to create two objects
+    ]
+
+    player_names = [
+        create_player(),
+        "AI"
     ]
 
     attacking_index = 0
+    #create_player()
 
     while True:
         defending_index = (attacking_index + 1) % 2
@@ -194,6 +230,7 @@ if __name__ == "__main__":
         print(defending_index)
         print(attacking_index)
 
+        print("%s ,your turn." % player_names[attacking_index])
         fire_missle = input("Enter your launch co-ordinates: (eg. 1,1)\n")
         xstr, ystr = fire_missle.split(",")
         x = int(xstr)
@@ -203,7 +240,7 @@ if __name__ == "__main__":
         draw_board(defending_board)
         
         if defending_board.is_game_over():
-            print("Congratulations, you are Victorious!")
+            print("%s Congratulations, you are Victorious!" % player_names[attacking_index])
             break
 
         attacking_index = defending_index
