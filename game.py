@@ -179,22 +179,29 @@ if __name__ == "__main__":
         #  Battleship.build((2,3), 3, "R"),
     ]  # hardcoded for debugging
 
-    for b in battleships:
-        print(b.body)
+    two_player = [
+        Oceangrid(10, 10, battleships),
+        Oceangrid(10, 10, battleships)
+    ]
 
-    game_board = Oceangrid(10, 10, battleships)
-
+    attacking_index = 0
 
     while True:
-        draw_board(game_board)
+        defending_index = (attacking_index + 1) % 2
+        defending_board =  two_player[defending_index]
+        print(defending_index)
+        print(attacking_index)
+
         fire_missle = input("Enter your launch co-ordinates: (eg. 1,1)\n")
         xstr, ystr = fire_missle.split(",")
         x = int(xstr)
         y = int(ystr)
-        print(fire_missle)
 
-        game_board.shoot((x,y))
+        defending_board.shoot((x,y))
+        draw_board(defending_board)
         
-        if game_board.is_game_over():
+        if defending_board.is_game_over():
             print("Congratulations, you are Victorious!")
             break
+
+        attacking_index = defending_index
