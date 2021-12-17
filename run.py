@@ -337,7 +337,7 @@ if __name__ == "__main__":
             os.system("clear")
 
     battleships = [
-        Battleship.build((1, 1), 3, "L"),
+        Battleship.build((1, 1), 3, "U"),
         Battleship.build((5, 8), 5, "U"),
         Battleship.build((4, 0), 3, "R"),
         Battleship.build((7, 6), 3, "D"),
