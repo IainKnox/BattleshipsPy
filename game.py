@@ -25,15 +25,12 @@ Legend:
 "~" - represents a miss
 "~" - represents an water or a empty part of the ocean grid
 """
-
+import time, os, random, copy
 from string import ascii_uppercase as letters
 letter = list(letters[:10])  # create a list of letters to use on the ocean grid.
 # look at possibility of user defining a board size to a max. of 26 letters
-missle = 10  # number of missles set when game is initialized, set to 10 for testing purposes
-import time
-import os
-import random
-import copy
+shot_count = 10  # number of missles set when game is initialized, set to 10 for testing purposes
+ship_sunk = 0
 
 
 class Oceangrid:
@@ -58,15 +55,18 @@ class Oceangrid:
         update the various ships with hits taken and
         save the fact that a shot was either a Hit or Miss
         """
+        hit_battleship = None
         is_hit = False
         for b in self.battleships:
             index = b.body_index(missle_location)  # return the index of the shot location
             if index is not None:
                 is_hit = True
                 b.hits[index] = True
+                hit_battleship = b
                 break
 
         self.missles.append(Hits(missle_location, is_hit))
+        return hit_battleship
 
 
     def is_game_over(self):
@@ -78,7 +78,9 @@ class Oceangrid:
         for b in self.battleships:
             if not b.is_sunk():
                 return False
-        return True
+            elif shot_count !=0:
+                return True
+            return True
 
 
 class Hits:  #shots
@@ -140,6 +142,8 @@ class Battleship:
         resulting in a sunk ship.
         """
         return all(self.hits)
+        ships_sunk += 1
+
 
 class Player:
     """
@@ -178,6 +182,25 @@ def create_player():
     time.sleep(1)
     print(f"Alright {player_name}, let's prepare for War!")
     return player_name
+
+def events(event_type, metadata):
+    """
+    create a function for handling the various events that occur during the game
+    for example game over, sinking ships, hits and misses
+    """
+    if event_type == "game_over":
+        print("%s Congratulations, you are Victorious!" % metadata["Player"])
+        print(f"You sunk {ship_sunk} ships")
+    elif event_type == "player_turn":
+        print("%s, it's your turn." % metadata["Player"])
+        
+    elif event_type == "ship_sunk":
+        print("%s, Destroyed a Ship!!." % metadata["Player"])
+    elif event_type == "ship_hit":
+        print("%s, you HIT a ship!" % metadata["Player"])
+    elif event_type == "miss":
+        print("%s, you MISSED." % metadata["Player"])
+
 
 def computer_move(game_board):
     """
@@ -254,14 +277,14 @@ def draw_board(game_board, debug_mode = True):
         for x in range(game_board.width):
             row.append(board[x][y] or " ")
         print("¦" + "".join(row)+ "¦")
-    print(header) 
+    print(header)
 
 
 if __name__ == "__main__":
     battleships = [
          Battleship.build((1,1), 2, "U"),
-         Battleship.build((5,8), 5, "U"),
-         Battleship.build((2,3), 3, "R"),
+        #  Battleship.build((5,8), 5, "U"),
+        #  Battleship.build((2,3), 3, "R"),
     ]  # hardcoded for debugging
 
     two_player = [      # creates 2 game boards
@@ -271,7 +294,7 @@ if __name__ == "__main__":
 
     players = [
         Player(create_player(), player_move),   # human player
-        Player("AI", computer_move)             # computer player
+        Player("Monty", computer_move)             # computer player
     ]
 
     attacking_index = 0
@@ -283,14 +306,26 @@ if __name__ == "__main__":
         print(defending_index)
         print(attacking_index)
 
-        print("%s ,your turn." % attacking_player.name)
+        events("player_turn", {"Player": attacking_player.name})
+        print(f"%s, you have {shot_count} missles left." % attacking_player.name)
         missle_location = attacking_player.moves(defending_board)
 
-        defending_board.shoot(missle_location)
+
+        hit_battleship = defending_board.shoot(missle_location)
+        if hit_battleship is None:
+            events("miss", {"Player": attacking_player.name})
+            shot_count -=1
+        else:
+            if hit_battleship.is_sunk():
+                events("ship_sunk", {"Player": attacking_player.name})
+                ship_sunk += 1
+            else:
+                events("ship_hit", {"Player": attacking_player.name})
+                shot_count -= 1
         draw_board(defending_board)
-        
+
         if defending_board.is_game_over():
-            print("%s Congratulations, you are Victorious!" % attacking_player.name)
+            events("game_over", {"Player": attacking_player.name})
             break
 
         attacking_index = defending_index
