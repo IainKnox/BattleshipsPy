@@ -263,7 +263,7 @@ def player_move(game_board):
     return (x, y)
 
 
-def draw_board(game_board, debug_mode=True):
+def draw_board(game_board, debug_mode=False):
     """
     creates a function that calls on the Oceangrid class, defines the
     width and height of the Oceangrid and populates the game board.
@@ -337,7 +337,7 @@ if __name__ == "__main__":
             os.system("clear")
 
     battleships = [
-        Battleship.build((1, 1), 2, "L"),
+        Battleship.build((1, 1), 3, "L"),
         Battleship.build((5, 8), 5, "U"),
         Battleship.build((4, 0), 3, "R"),
         Battleship.build((7, 6), 3, "D"),
