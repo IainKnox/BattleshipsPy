@@ -46,19 +46,19 @@ game_rules = """
              but not diagonally.
         2.2) Do not place a ship so that it overlaps another ship,
              or the edge of the grid.
-        2.3) Do not change the position of ship once the 
+        2.3) Do not change the position of ship once the
              game has begun.
     3) You and your opponent will alternate turns, calling out
         one shot per turn to try and Hit each others ships.
     4) On your turn, designate a co-ordinate to fire upon.
-        For example D-5. Your opponent will confirm whether 
+        For example D-5. Your opponent will confirm whether
         the shot is a Hit or Miss.
     5) If you call a shot occupied by your opponents ocean grid,
         it is considered a Hit. You opponent will confirm which vessel
         is hit and mark with a 'H'
     6) If you call a shot not occupied by your opponent ocean grid,
         it is considered a Miss. This is marked with a '~'
-    7) Once all the co-ordinates of any one ship have been Hit, it is 
+    7) Once all the co-ordinates of any one ship have been Hit, it is
         considered as Sunk.
     8) If you are the first player to sink your opponents entire fleet,
         you win the game!
@@ -213,7 +213,7 @@ def create_player():
     print("Welcome to BattleshipPY\n")
     print("Please enter your name: \n ")
     while True:
-        player_name = input("Nothing too fancy mind, Max 10 characters.\n").upper()
+        player_name = input("Nothing too fancy ,Max 10 characters.\n").upper()
         if valid_name(player_name):
             break
     print(f"You shall be known as: {player_name}\n")
@@ -263,7 +263,7 @@ def player_move(game_board):
     return (x, y)
 
 
-def draw_board(game_board, debug_mode=False):
+def draw_board(game_board, debug_mode=True):
     """
     creates a function that calls on the Oceangrid class, defines the
     width and height of the Oceangrid and populates the game board.
@@ -271,7 +271,7 @@ def draw_board(game_board, debug_mode=False):
     debugging by setting the value to True.
     """
     header = ("+" + "-" * game_board.width + "+")
-    
+
     print(header)
 
     # empty game_board
@@ -322,10 +322,10 @@ def draw_board(game_board, debug_mode=False):
 
 
 if __name__ == "__main__":
-    
-    instructions = input("Would you like to review the game rules? Y or N\n").lower()
+
+    instructions = input("Review the game rules? Yor N\n").lower()
     while instructions != "y" and instructions != "n":
-        instructions = input("\nCome again? Enter y for yes or n for no.\n> ").lower()
+        instructions = input("\nCome again? Enter y or n.\n> ").lower()
     else:
         if instructions == "n":
             print("\nLooks like we are good to go.\n")
@@ -337,9 +337,11 @@ if __name__ == "__main__":
             os.system("clear")
 
     battleships = [
-        Battleship.build((1, 1), 2, "U"),
+        Battleship.build((1, 1), 2, "L"),
         Battleship.build((5, 8), 5, "U"),
-        Battleship.build((2, 3), 3, "R"),
+        Battleship.build((4, 0), 3, "R"),
+        Battleship.build((7, 6), 3, "D"),
+        Battleship.build((2, 9), 4, "R")
     ]  # hardcoded for debugging
 
     two_player = [      # creates 2 game boards
@@ -358,7 +360,6 @@ if __name__ == "__main__":
         defending_index = (attacking_index + 1) % 2
         defending_board = two_player[defending_index]
         attacking_player = players[attacking_index]
-        
 
         events("player_turn", {"Player": attacking_player.name})
         print(f"%s, you have {shot_count} missles." % attacking_player.name)
@@ -385,11 +386,10 @@ if __name__ == "__main__":
         attacking_index = defending_index
 
     # Define a loop for playing the game again
-    
+
     answer = input("\nWould you like to play again? Y or N\n").lower()
     if answer == "n":
         print("Thank you for playing.")
         exit(0)
     else:
         print("Let's get back out there!")
-    return True
