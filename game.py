@@ -73,7 +73,10 @@ class Oceangrid:
         iterate through the ships and check if they have been
         destroyed.
         """
-        pass
+        for b in self.battleships:
+            if not b.is_sunk():
+                return False
+        return True
 
 
 class Hits:  #shots
@@ -116,11 +119,11 @@ class Battleship:
         """
         create a function that stores information regarding hits taken
         in terms of the length of the ship. With hits being changed
-        to True when a hit is registered. 
+        to True when a hit is registered.
         """ 
         self.body = body
         self.direction = direction
-        self.hits = [False] * len(body)  
+        self.hits = [False] * len(body)
         # eg[False][False][True] <-- represents 1 hit on a 3 block ship
 
     def body_index(self, location):
@@ -158,7 +161,7 @@ def draw_board(game_board, debug_mode = False):
         if sh.is_hit:
             m = "X"
         else:
-            m = "."
+            m = "~"
         board[x][y] = m
 
     for y in range(game_board.height):
@@ -172,8 +175,8 @@ def draw_board(game_board, debug_mode = False):
 if __name__ == "__main__":
     battleships = [
          Battleship.build((1,1), 2, "U"),
-         Battleship.build((5,8), 5, "U"),
-         Battleship.build((2,3), 3, "R"),
+        #  Battleship.build((5,8), 5, "U"),
+        #  Battleship.build((2,3), 3, "R"),
     ]  # hardcoded for debugging
 
     for b in battleships:
@@ -183,6 +186,7 @@ if __name__ == "__main__":
 
 
     while True:
+        draw_board(game_board)
         fire_missle = input("Enter your launch co-ordinates: (eg. 1,1)\n")
         xstr, ystr = fire_missle.split(",")
         x = int(xstr)
@@ -190,4 +194,7 @@ if __name__ == "__main__":
         print(fire_missle)
 
         game_board.shoot((x,y))
-        draw_board(game_board)
+        
+        if game_board.is_game_over():
+            print("Congratulations, you are Victorious!")
+            break
