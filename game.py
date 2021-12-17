@@ -141,7 +141,15 @@ class Battleship:
         """
         return all(self.hits)
 
-    
+class Player:
+    """
+    create a player class to define the various players and control
+    the flow of moves to progress the game.
+    """
+    def __init__(self, name, moves):
+        self.name = name
+        self.moves = moves
+
 def valid_name(player):
     """
     create a function to validate the player's chosen name, ensuring
@@ -171,8 +179,34 @@ def create_player():
     print(f"Alright {player_name}, let's prepare for War!")
     return player_name
 
+def computer_move(game_board):
+    """
+    create a function that defines a very basic version of
+    an AI player as the opponent using the random library to move
+    """
+    x = random.randint(0, game_board.width -1)
+    y = random.randint(0, game_board.height -1)
+    return (x, y)
 
-def draw_board(game_board, debug_mode = False):
+def player_move(game_board):
+    """
+    create a function that defines the human moves on the opponent
+    board.
+    """
+    fire_missle = input("Enter your launch co-ordinates: (eg. 1,1)\n")
+    xstr, ystr = fire_missle.split(",")
+    x = int(xstr)
+    y = int(ystr)
+    return (x, y)
+
+
+def draw_board(game_board, debug_mode = True):
+    """
+    creates a function that calls on the Oceangrid class, defines the 
+    width and height of the Oceangrid and populates the game board.
+    The debug mode feature allows the user to diplay the ships for easy
+    debugging by setting the value to True.
+    """
     header = ("+" + "-" * game_board.width + "+")
     print(header)
 
@@ -184,8 +218,27 @@ def draw_board(game_board, debug_mode = False):
     # add ships to board
     if debug_mode:
         for b in game_board.battleships:
-            for x, y in b.body:
-                board[x][y] = "B"
+            for d, (x, y) in enumerate(b.body):
+            # add a bit of styling to the ships
+            # based on the direction their pointing
+                if b.direction == "U":
+                    parts = ("v", "|", "^")
+                elif b.direction == "D":
+                    parts = ("^", "|", "v")
+                elif b.direction == "L":
+                    parts = (">", "=", "<")
+                elif b.direction == "R":
+                    parts = ("<", "=", ">")
+                else:
+                    raise "Your compass be broke!"
+                if d == 0:
+                    part = parts[0]
+                elif d == len(b.body) -1:
+                    part = parts[2]
+                else:
+                    part = parts[1]
+
+                board[x][y] = part
 
     # add missles to the board
     for sh in game_board.missles:
@@ -207,40 +260,37 @@ def draw_board(game_board, debug_mode = False):
 if __name__ == "__main__":
     battleships = [
          Battleship.build((1,1), 2, "U"),
-        #  Battleship.build((5,8), 5, "U"),
-        #  Battleship.build((2,3), 3, "R"),
+         Battleship.build((5,8), 5, "U"),
+         Battleship.build((2,3), 3, "R"),
     ]  # hardcoded for debugging
 
     two_player = [      # creates 2 game boards
         Oceangrid(battleships, 10, 10),
-        Oceangrid(copy.deepcopy(battleships), 10, 10)  # make a copy to create two objects
+        Oceangrid(copy.deepcopy(battleships), 10, 10)  # makes a copy to create two objects
     ]
 
-    player_names = [
-        create_player(),
-        "AI"
+    players = [
+        Player(create_player(), player_move),   # human player
+        Player("AI", computer_move)             # computer player
     ]
 
     attacking_index = 0
-    #create_player()
 
     while True:
         defending_index = (attacking_index + 1) % 2
         defending_board =  two_player[defending_index]
+        attacking_player = players[attacking_index]
         print(defending_index)
         print(attacking_index)
 
-        print("%s ,your turn." % player_names[attacking_index])
-        fire_missle = input("Enter your launch co-ordinates: (eg. 1,1)\n")
-        xstr, ystr = fire_missle.split(",")
-        x = int(xstr)
-        y = int(ystr)
+        print("%s ,your turn." % attacking_player.name)
+        missle_location = attacking_player.moves(defending_board)
 
-        defending_board.shoot((x,y))
+        defending_board.shoot(missle_location)
         draw_board(defending_board)
         
         if defending_board.is_game_over():
-            print("%s Congratulations, you are Victorious!" % player_names[attacking_index])
+            print("%s Congratulations, you are Victorious!" % attacking_player.name)
             break
 
         attacking_index = defending_index
