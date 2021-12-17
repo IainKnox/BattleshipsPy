@@ -263,7 +263,7 @@ def player_move(game_board):
     return (x, y)
 
 
-def draw_board(game_board, debug_mode=True):
+def draw_board(game_board, debug_mode=False):
     """
     creates a function that calls on the Oceangrid class, defines the
     width and height of the Oceangrid and populates the game board.
@@ -383,3 +383,13 @@ if __name__ == "__main__":
             break
 
         attacking_index = defending_index
+
+    # Define a loop for playing the game again
+    
+    answer = input("\nWould you like to play again? Y or N\n").lower()
+    if answer == "n":
+        print("Thank you for playing.")
+        exit(0)
+    else:
+        print("Let's get back out there!")
+    return True
