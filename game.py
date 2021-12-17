@@ -33,6 +33,8 @@ missle = 10  # number of missles set when game is initialized, set to 10 for tes
 import time
 import os
 import random
+import copy
+
 
 class Oceangrid:
     """
@@ -40,16 +42,16 @@ class Oceangrid:
     board that has width, height and ships.
     """
 
-    def __init__(self, width, height, battleships):
+    def __init__(self, battleships, width, height):
         """
         define what makes a game board and create
         an array to store all the missle co ordinates fired
         in the shots array.
         """
-        self.width = width
-        self.height = height
         self.battleships = battleships 
         self.missles = []
+        self.width = width
+        self.height = height
 
     def shoot(self, missle_location): #take shots
         """
@@ -180,8 +182,8 @@ if __name__ == "__main__":
     ]  # hardcoded for debugging
 
     two_player = [
-        Oceangrid(10, 10, battleships),
-        Oceangrid(10, 10, battleships)
+        Oceangrid(battleships, 10, 10),
+        Oceangrid(copy.deepcopy(battleships), 10, 10)
     ]
 
     attacking_index = 0
