@@ -30,8 +30,8 @@ import os
 import random
 import copy
 from string import ascii_uppercase as letters
-letter = list(letters[:10])
-# create a list of letters for ocean grid.
+letter = [ch for ch in letters[:10]]
+# use list comprehension to create a list of 10 letters for ocean grid.
 # look at possibility of user defining a board size to a max. of 26 letters
 shot_count = 10  # no of missles when game starts, 10 for testing purposes
 ship_sunk = 0
