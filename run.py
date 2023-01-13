@@ -78,7 +78,7 @@ class Oceangrid:
         in the shots array.
         """
         self.battleships = battleships
-        self.missles = []
+        self.missles = [(i,j) for i in range(width) for j in range(height)]
         self.width = width
         self.height = height
 
