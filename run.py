@@ -88,18 +88,14 @@ class Oceangrid:
         update the various ships with hits taken and
         save the fact that a shot was either a Hit or Miss
         """
-        hit_battleship = None
-        is_hit = False
-        for b in self.battleships:
-            index = b.body_index(missle_location)  # index of the shot location
-            if index is not None:
-                is_hit = True
-                b.hits[index] = True
-                hit_battleship = b
-                break
-
-        self.missles.append(Hits(missle_location, is_hit))
-        return hit_battleship
+        try:
+            x, y = missle_location
+            if self.is_legal_move(missle_location):
+                # fire the missle
+            else:
+                print("Invalid move!")
+        except ValueError:
+            print("Invalid cooredinates entered! Please ensure all coordinates are represented in (x, y) values.")
 
     def is_game_over(self):
         """
